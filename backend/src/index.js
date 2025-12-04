@@ -17,7 +17,7 @@ const webhookRoutes = require('./routes/webhookRoutes');
 const debugRoutes = require('./routes/debugRoutes');
 
 const errorHandler = require('./middleware/errorHandler');
-const { startSyncScheduler } = require('./services/syncScheduler');
+const { startSyncScheduler } = require('./services/syncServices');
 
 const app = express();
 
@@ -68,7 +68,7 @@ app.use('*', (req, res) => {
 // Error handling middleware
 app.use(errorHandler);
 
-// Initialize Redis and start server
+// Initialize Redis and start server 
 const startServer = async () => {
   await connectRedis();
   

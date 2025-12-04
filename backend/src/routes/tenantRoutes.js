@@ -4,7 +4,7 @@ const tenantController = require('../controllers/tenantController');
 const auth = require('../middleware/auth');
 
 // POST /api/tenant/register
-router.post('/register', tenantController.register);
+router.post('/register', tenantController.register);  
 
 // POST /api/tenant/credentials
 router.post('/credentials', auth, tenantController.updateCredentials);

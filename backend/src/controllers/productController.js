@@ -1,6 +1,8 @@
 const prisma = require('../config/prisma');
 
 exports.getProducts = async (req, res, next) => {
+    console.log('getProducts');
+    
   try {
     const { 
       page = 1, 

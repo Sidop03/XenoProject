@@ -146,52 +146,67 @@ class ShopifyService {
   async syncOrders(tenantId) {
     try {
       const orders = await this.fetchOrders();
+      console.log(`\n📦 Fetched ${orders.length} orders from Shopify`);
+      
       let syncedCount = 0;
-
+  
       for (const order of orders) {
-        const customerId = order.customer?.id?.toString();
+        // More robust customer ID extraction
+        const customerId = order.customer?.id ? String(order.customer.id) : null;
         
-        if (!customerId) continue;
-
-        await prisma.order.upsert({
-          where: { id: order.id.toString() },
-          update: {
-            orderNumber: order.order_number?.toString(),
-            totalPrice: parseFloat(order.total_price || 0),
-            subtotalPrice: parseFloat(order.subtotal_price || 0),
-            taxPrice: parseFloat(order.total_tax || 0),
-            orderDate: new Date(order.created_at),
-            status: order.cancelled_at ? 'cancelled' : order.closed_at ? 'closed' : 'open',
-            fulfillmentStatus: order.fulfillment_status || 'unfulfilled',
-            financialStatus: order.financial_status || 'pending',
-            updatedAt: new Date(order.updated_at)
-          },
-          create: {
-            id: order.id.toString(),
-            tenantId,
-            customerId,
-            orderNumber: order.order_number?.toString(),
-            totalPrice: parseFloat(order.total_price || 0),
-            subtotalPrice: parseFloat(order.subtotal_price || 0),
-            taxPrice: parseFloat(order.total_tax || 0),
-            orderDate: new Date(order.created_at),
-            status: order.cancelled_at ? 'cancelled' : order.closed_at ? 'closed' : 'open',
-            fulfillmentStatus: order.fulfillment_status || 'unfulfilled',
-            financialStatus: order.financial_status || 'pending',
-            createdAt: new Date(order.created_at),
-            updatedAt: new Date(order.updated_at)
-          }
-        });
-        syncedCount++;
+        console.log(`Processing Order #${order.order_number} - Customer ID: ${customerId || 'NONE'}`);
+        
+        // Don't skip orders without customers - set customerId to null
+        // This allows you to track orders even if customer data is missing
+        
+        try {
+          await prisma.order.upsert({
+            where: { id: order.id.toString() },
+            update: {
+              orderNumber: parseInt(order.order_number),
+              totalPrice: parseFloat(order.total_price || 0),
+              subtotalPrice: parseFloat(order.subtotal_price || 0),
+              taxPrice: parseFloat(order.total_tax || 0),
+              orderDate: new Date(order.created_at),
+              status: order.cancelled_at ? 'cancelled' : order.closed_at ? 'closed' : 'open',
+              fulfillmentStatus: order.fulfillment_status || 'unfulfilled',
+              financialStatus: order.financial_status || 'pending',
+              updatedAt: new Date(order.updated_at)
+            },
+            create: {
+              id: order.id.toString(),
+              tenantId,
+              customerId,  // Can be null if customer not found
+              orderNumber: parseInt(order.order_number),
+              totalPrice: parseFloat(order.total_price || 0),
+              subtotalPrice: parseFloat(order.subtotal_price || 0),
+              taxPrice: parseFloat(order.total_tax || 0),
+              orderDate: new Date(order.created_at),
+              status: order.cancelled_at ? 'cancelled' : order.closed_at ? 'closed' : 'open',
+              fulfillmentStatus: order.fulfillment_status || 'unfulfilled',
+              financialStatus: order.financial_status || 'pending',
+              createdAt: new Date(order.created_at),
+              updatedAt: new Date(order.updated_at)
+            }
+          });
+          console.log(`✅ Synced order #${order.order_number}`);
+          syncedCount++;
+        } catch (error) {
+          console.error(`❌ Failed order #${order.order_number}:`, error.message);
+        }
       }
-
+  
+      console.log(`\n✅ Total synced: ${syncedCount} orders`);
+      
       await this.logSync(tenantId, 'orders', 'success', syncedCount);
       return { success: true, count: syncedCount };
     } catch (error) {
+      console.error('❌ Order sync failed:', error.message);
       await this.logSync(tenantId, 'orders', 'failed', 0, error.message);
       throw error;
     }
   }
+  
 
   async logSync(tenantId, syncType, status, recordsCount, errorMessage = null) {
     await prisma.syncLog.create({

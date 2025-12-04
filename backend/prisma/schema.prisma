@@ -63,7 +63,7 @@ model Order {
   id              String      @id
   tenantId        String
   customerId      String
-  orderNumber     String?
+  orderNumber     Int?
   totalPrice      Float
   subtotalPrice   Float?
   taxPrice        Float?

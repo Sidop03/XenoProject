@@ -1,6 +1,6 @@
 const cron = require('node-cron');
 const prisma = require('../config/prisma');
-const ShopifyService = require('./shopifyService');
+const ShopifyService = require('./shopifyServices');
 
 const syncAllTenants = async () => {
   console.log('🔄 Starting scheduled sync for all tenants...');

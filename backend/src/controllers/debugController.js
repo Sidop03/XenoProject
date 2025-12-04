@@ -54,7 +54,7 @@ exports.getDbStats = async (req, res, next) => {
     ]);
 
     res.json({
-      success: true,
+      success: true, 
       data: {
         database: {
           tenants: tenantsCount,
@@ -63,7 +63,7 @@ exports.getDbStats = async (req, res, next) => {
           products: productsCount,
           syncLogs: syncLogsCount
         }
-      }
+      }   
     });
   } catch (error) {
     next(error);

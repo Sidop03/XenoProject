@@ -1,5 +1,5 @@
 const prisma = require('../config/prisma');
-const ShopifyService = require('../services/shopifyService');
+const ShopifyService = require('../services/shopifyServices');
 
 exports.syncAll = async (req, res, next) => {
   try {

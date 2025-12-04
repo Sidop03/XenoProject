@@ -4,11 +4,10 @@ exports.getOrders = async (req, res, next) => {
   try {
     const { 
       page = 1, 
-      limit = 20, 
+      limit = 20,  
       status = '',
       startDate = '',
       endDate = '',
-      sortBy = 'orderDate',
       sortOrder = 'desc'
     } = req.query;
 
