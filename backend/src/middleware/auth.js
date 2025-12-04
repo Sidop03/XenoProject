@@ -32,6 +32,8 @@ const auth = async (req, res, next) => {
     req.tenant = tenant;
     req.tenantId = tenant.id;
     req.token = token;
+    console.log("pahoch");
+    
     next();
   } catch (error) {
     if (error.name === 'TokenExpiredError') {
