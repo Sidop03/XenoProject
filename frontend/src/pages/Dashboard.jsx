@@ -23,7 +23,7 @@ const Dashboard = () => {
         getRevenueByDate(),
         getTopCustomers({ limit: 5 })
       ]);
-
+      
       setMetrics(metricsRes.data.data);
       setRevenueData(revenueRes.data.data);
       setTopCustomers(customersRes.data.data);

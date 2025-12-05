@@ -20,9 +20,6 @@ const auth = async (req, res, next) => {
     // Verify token
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-    console.log("decoded ");
-    
-    
     const tenant = await prisma.tenant.findUnique({
       where: { id: decoded.tenantId },
       select: { id: true, email: true, shopName: true }
