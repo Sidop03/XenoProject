@@ -4,7 +4,7 @@ exports.getCustomers = async (req, res, next) => {
   try {
     const { 
       page = 1, 
-      limit = 20, 
+      limit = 2, 
       search = '', 
       sortBy = 'createdAt',
       sortOrder = 'desc'

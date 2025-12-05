@@ -38,7 +38,7 @@ const Settings = () => {
               type="email"
               value={user?.email || ''}
               disabled
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-50"
+              className="w-full px-4 py-2 border border-gray-300 text-gray-800 rounded-lg bg-gray-50"
             />
           </div>
 
@@ -50,7 +50,7 @@ const Settings = () => {
               type="text"
               value={user?.shopName || ''}
               disabled
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-50"
+              className="w-full px-4 py-2 border border-gray-300 text-gray-800 rounded-lg bg-gray-50"
             />
           </div>
 
@@ -62,7 +62,7 @@ const Settings = () => {
               type="text"
               value={user?.shopifyStoreUrl || ''}
               disabled
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-50"
+              className="w-full px-4 py-2 border border-gray-300 text-gray-800 rounded-lg bg-gray-50"
             />
           </div>
         </div>
