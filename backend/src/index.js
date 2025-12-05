@@ -13,7 +13,7 @@ const metricsRoutes = require('./routes/metricsRoutes');
 const customerRoutes = require('./routes/customerRoutes');
 const orderRoutes = require('./routes/orderRoutes');
 const productRoutes = require('./routes/productRoutes');
-const webhookRoutes = require('./routes/webhookRoutes');
+const webhookRoutes = require('./routes/webHookRoutes');
 const debugRoutes = require('./routes/debugRoutes');
 
 const errorHandler = require('./middleware/errorHandler');
@@ -29,10 +29,16 @@ const limiter = rateLimit({
 });
 
 // Middleware
+// ✅ CORRECT - Allows both local and production
 app.use(cors({
-  origin: process.env.FRONTEND_URL || 'http://localhost:5173',
+  origin: [
+    'http://localhost:5173',
+    'http://localhost:5175',
+    'https://xenoprojectfull-stack.onrender.com'
+  ],
   credentials: true
 }));
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser(process.env.COOKIE_SECRET));

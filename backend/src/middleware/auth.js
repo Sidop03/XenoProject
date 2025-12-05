@@ -16,9 +16,12 @@ const auth = async (req, res, next) => {
     if (blacklisted) {
       return res.status(401).json({ error: 'Token has been revoked' });
     }
-
+    
     // Verify token
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+    console.log("decoded ");
+    
     
     const tenant = await prisma.tenant.findUnique({
       where: { id: decoded.tenantId },
