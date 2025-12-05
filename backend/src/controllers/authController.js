@@ -3,6 +3,25 @@ const jwt = require('jsonwebtoken');
 const prisma = require('../config/prisma');
 const { blacklistToken } = require('../config/redis');
 
+const getCookieOptions = () => {
+  const isProduction = process.env.NODE_ENV === 'production';
+  
+  console.log('🍪 Setting cookie with:', {
+    NODE_ENV: process.env.NODE_ENV,
+    isProduction,
+    secure: isProduction,
+    sameSite: isProduction ? 'none' : 'lax'
+  });
+  
+  return {
+    httpOnly: true,
+    secure: isProduction, // MUST be true in production
+    sameSite: isProduction ? 'none' : 'lax', // MUST be 'none' in production
+    maxAge: 7 * 24 * 60 * 60 * 1000,
+    path: '/'
+  };
+};
+
 exports.login = async (req, res, next) => {
   try {
     const { email, password } = req.body;
@@ -33,15 +52,11 @@ exports.login = async (req, res, next) => {
 
     // Set token in httpOnly cookie
     // Set cookie with cross-domain settings
-    res.cookie('authToken', token, {
-      httpOnly: true,
-      secure: true, // ✅ MUST be true for production (HTTPS)
-      sameSite: 'none', // ✅ CRITICAL: allows cross-domain cookies
-      maxAge: 7 * 24 * 60 * 60 * 1000,
-      path: '/' // ✅ Ensure cookie is available for all paths
-    });
-
-
+    const cookieOptions = getCookieOptions();
+    res.cookie('authToken', token, cookieOptions);
+    
+    console.log('✅ Login successful, cookie set for:', tenant.email);
+    
     res.json({
       success: true,
       message: 'Login successful',
