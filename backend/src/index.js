@@ -36,7 +36,9 @@ app.use(cors({
     'http://localhost:5175',
     'https://xenoprojectfull-stack.onrender.com'
   ],
-  credentials: true
+  credentials: true,
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  exposedHeaders: ['Set-Cookie'] 
 }));
 
 app.use(express.json());

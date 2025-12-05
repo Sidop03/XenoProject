@@ -15,7 +15,7 @@ exports.login = async (req, res, next) => {
       where: { email }
     });
 
-    if (!tenant) {
+    if (!tenant) {  
       return res.status(401).json({ error: 'Invalid credentials' });
     }
 
@@ -32,12 +32,15 @@ exports.login = async (req, res, next) => {
     );
 
     // Set token in httpOnly cookie
+    // Set cookie with cross-domain settings
     res.cookie('authToken', token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict',
-      maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
+      secure: true, // ✅ MUST be true for production (HTTPS)
+      sameSite: 'none', // ✅ CRITICAL: allows cross-domain cookies
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+      path: '/' // ✅ Ensure cookie is available for all paths
     });
+
 
     res.json({
       success: true,
