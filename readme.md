@@ -1,279 +1,150 @@
-XENO CRM – Shopify Customer Relationship Management Platform
+Xeno CRM – Shopify Customer Relationship Manager
 
-Xeno CRM is a full-stack CRM platform built for Shopify merchants to analyze customer behavior, create dynamic audience segments, and send SMS/Email campaigns.
-It is optimized for scalability, real-time sync, and multi-tenant architecture.
+Xeno CRM is a full-stack platform built for Shopify merchants to manage customer data, segment audiences, sync Shopify orders, and run campaigns — all in one place.
 
-📚 Table of Contents
+🚀 Features
 
-Features
+Shopify Webhook Integration (Orders, Customers)
 
-Architecture
+Tenant-based Multi-Store Architecture
 
-Shopify Integration
+Real-time Customer Syncing
 
-Campaign Workflow
+Audience Segmentation
 
-Authentication Flow
+Campaign Creation & Targeting
 
-Database Schema
+Secure Authentication (JWT)
 
-Tech Stack
+Role-based Access Control
 
-Project Structure
+Full Admin Dashboard
 
-Future Enhancements
+🏗️ Architecture Overview
+graph TD
+    A[Shopify Store] -->|Webhooks| B(Backend API)
+    B --> C[(PostgreSQL Database)]
+    B --> D[(Redis Cache)]
+    E[Admin Dashboard - React] --> B
+    B --> F[Background Workers]
 
-Setup Instructions
-
-⭐ Features
-
-🔒 Authentication (JWT)
-
-Access & Refresh Token mechanism
-
-Auto-refresh using interceptors
-
-Logout + token invalidation
-
-Protected backend routes
-
-Role-based support (extensible)
-
-👥 Customer Management
-
-Fetch & sync customers from Shopify
-
-Auto-update total spent & order count
-
-Fast search, pagination, filters
-
-Multi-tenant isolation via tenantId
-
-🎯 Audience Segmentation
-
-Condition builder UI
-
-Dynamic segment rule engine
-
-Auto-recalculation after customer update
-
-Supports multiple operators: >, <, contains, =, etc.
-
-📣 Campaign Management
-
-SMS / Email campaigns
-
-Redis + BullMQ job scheduling
-
-Delivery tracking: delivered / failed / pending
-
-Can integrate with Twilio / SendGrid / AWS SES
-
-🛍️ Shopify Integration
-
-Webhooks:
-
-orders/create
-
-customers/create
-
-customers/update
-
-Automatic tenant creation
-
-Per-store data isolation
-
-🏗️ System Architecture
-flowchart TB
-
-subgraph Frontend
-A[React + Vite + Tailwind] --> B[JWT Auth Flow]
-end
-
-subgraph Backend
-C[Express.js API] --> D[Auth Service]
-C --> E[Customer Service]
-C --> F[Segment Service]
-C --> G[Campaign Service]
-end
-
-subgraph DB
-H[(PostgreSQL)]
-end
-
-subgraph Cache
-I[(Redis)]
-J[BullMQ Queue]
-end
-
-A --> C
-D --> H
-E --> H
-F --> H
-G --> H
-G --> J
-E --> I
-
-🛍️ Shopify Webhook Flow
-sequenceDiagram
-    participant Shopify
-    participant Server
-    participant CustomerService
-    participant DB
-
-    Shopify->>Server: POST /webhook/orders/create
-    Server->>CustomerService: Process order
-    CustomerService->>DB: Update totalSpent & ordersCount
-    DB-->>CustomerService: Acknowledgement
-    CustomerService-->>Server: 200 OK
-    Server-->>Shopify: 200 OK
-
-📣 Campaign Flow
-flowchart LR
-A[Create Campaign] --> B[Store in PostgreSQL]
-B --> C[Push job to BullMQ Queue]
-C --> D[Worker Processes Job]
-D --> E[Send SMS/Email via Provider]
-E --> F[Update Status (Delivered/Failed)]
-F --> B
-
-🔐 Authentication Sequence Diagram
-sequenceDiagram
-    participant User
-    participant Frontend
-    participant Backend
-    participant DB
-
-    User->>Frontend: Submit login form
-    Frontend->>Backend: POST /auth/login
-    Backend->>DB: Validate credentials
-    DB-->>Backend: User found
-    Backend-->>Frontend: Access + Refresh Token
-    Frontend->>Frontend: Save tokens in storage
-
-🗄️ ER Diagram (Database Schema)
-erDiagram
-    CUSTOMER {
-        string id PK
-        string tenantId FK
-        string email
-        string firstName
-        string lastName
-        string phone
-        float totalSpent
-        int ordersCount
-        datetime createdAt
-    }
-
-    SEGMENT {
-        string id PK
-        string tenantId FK
-        string name
-        json rules
-        datetime createdAt
-    }
-
-    CAMPAIGN {
-        string id PK
-        string tenantId FK
-        string segmentId FK
-        string title
-        string content
-        string channel
-        string status
-        datetime createdAt
-    }
-
-    TENANT {
-        string id PK
-        string shopDomain
-        datetime createdAt
-    }
-
-    TENANT ||--o{ CUSTOMER : owns
-    TENANT ||--o{ SEGMENT : owns
-    TENANT ||--o{ CAMPAIGN : owns
-    SEGMENT ||--o{ CAMPAIGN : targets
-
-🧰 Tech Stack
-Frontend
-
-React.js
-
-Vite
-
-Tailwind CSS
-
-Axios + Interceptors
-
-Context API
-
+🛠️ Tech Stack
 Backend
 
 Node.js
 
 Express.js
 
-Prisma ORM
+PostgreSQL (via Prisma ORM)
 
-PostgreSQL
+Redis (Caching)
 
-Redis (Cache + Queues)
+Shopify Admin API
 
-BullMQ
+JWT Authentication
 
-Deployment
+Frontend
 
-Render / Railway / Vercel
+React.js
 
-Webhook validator (HMAC)
+TailwindCSS
 
-Production logs (pino/winston)
+Recharts (Analytics)
 
-📂 Project Structure
-xeno-crm/
+🔄 Shopify Sync Flow
+sequenceDiagram
+    participant Shopify
+    participant Backend
+    participant DB
+    Shopify->>Backend: Order/Create Webhook
+    Backend->>DB: Insert/Update Customer & Order
+    Backend-->>Shopify: 200 OK
+
+🏬 Multi-Tenant Database Model
+erDiagram
+    Tenant ||--o{ Customer : has
+    Tenant ||--o{ Order : has  
+    Customer ||--o{ Order : places  
+
+    Tenant {
+        string id PK
+        string shopDomain
+        string accessToken
+    }
+
+    Customer {
+        string id PK
+        string tenantId FK
+        string email
+        float totalSpent
+        int ordersCount
+    }
+
+    Order {
+        string id PK
+        string customerId FK
+        string tenantId FK
+        float amount
+        date createdAt
+    }
+
+📡 API Endpoints (Backend)
+flowchart TD
+    A[/Client/] --> B{Auth}
+    B -->|Login| C[POST /auth/login]
+    B -->|Signup| D[POST /auth/signup]
+
+    A --> E{Customers}
+    E --> F[GET /customers]
+    E --> G[GET /customers/:id]
+
+    A --> H{Orders}
+    H --> I[GET /orders]
+    H --> J[GET /orders/:id]
+
+    A --> K{Webhooks}
+    K --> L[POST /webhook/order-create]
+    K --> M[POST /webhook/customer-create]
+
+📁 Project Structure
+xeno_project/
 │
 ├── backend/
 │   ├── src/
 │   │   ├── controllers/
-│   │   ├── routes/
 │   │   ├── middleware/
 │   │   ├── services/
-│   │   ├── jobs/
-│   │   ├── prisma/
-│   ├── index.js
+│   │   └── prisma/
+│   └── server.js
 │
-├── frontend/
-│   ├── src/
-│   │   ├── components/
-│   │   ├── pages/
-│   │   ├── context/
-│   │   ├── api/
-│   └── vite.config.js
+└── frontend/
+    ├── src/
+    ├── components/
+    ├── pages/
+    └── App.jsx
 
-🔮 Future Enhancements
+⚙️ Environment Variables
 
-Shopify App Bridge
+Create a .env file in /backend:
 
-AI-based customer scoring
+DATABASE_URL=postgres://...
+REDIS_URL=redis://...
+SHOPIFY_API_KEY=...
+SHOPIFY_API_SECRET=...
+JWT_SECRET=...
 
-Recommendation engine
-
-Cohort analytics
-
-Multi-store parent dashboards
-
-Drag-and-drop email builder
-
-A/B testing for campaigns
-
-⚙️ Setup
-git clone https://github.com/yourusername/xeno-crm.git
+🧪 Running The Project
+Backend
 cd backend
 npm install
-npx prisma migrate dev
 npm run dev
 
-cd ../frontend
+Frontend
+cd frontend
 npm install
-npm run dev
+npm start
+
+📬 Webhook Endpoints (Shopify)
+Event	Endpoint
+Order Create	/webhook/order-create
+Customer Create	/webhook/customer-create
