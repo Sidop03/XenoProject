@@ -15,11 +15,11 @@ It is designed with multi-tenant support, high performance, and scalable archite
 ## 🏗️ System Architecture
 ```mermaid
 graph TD
-    A[Shopify Store] -->|Webhooks| B[Backend API<br>(Node.js)]
-    B --> C[(PostgreSQL Database)]
+    A[Shopify Store] -->|Webhooks| B[Backend API (Node.js)]
+    B --> C[(PostgreSQL)]
     B --> D[(Redis Cache)]
     E[React Admin Dashboard] --> B
-    B --> F[Background Workers / Queue]
+    B --> F[Background Worker / Queue]
 ```
 
 ## 🛠️ Tech Stack
