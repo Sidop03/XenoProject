@@ -10,6 +10,38 @@ const api = axios.create({
   },
 });
 
+// ✅ Request interceptor - adds Bearer token to all requests
+api.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+      console.log('✅ Sending token in Authorization header'); // Debug
+    } else {
+      console.log('⚠️ No token in localStorage'); // Debug
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
+
+// Response interceptor - handles 401 errors
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response?.status === 401) {
+      console.log('❌ 401 error - clearing token and redirecting');
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+      window.location.href = '/#/';
+    }
+    return Promise.reject(error);
+  }
+);
+
+
 // Auth
 export const login = (credentials) => api.post('/auth/login', credentials);
 export const register = (data) => api.post('/tenant/register', data);

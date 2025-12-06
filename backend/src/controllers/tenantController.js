@@ -45,23 +45,26 @@ exports.register = async (req, res, next) => {
       { expiresIn: process.env.JWT_EXPIRES_IN || '7d' }
     );
 
-    // Set token in httpOnly cookie
+    // Set cookie
     res.cookie('authToken', token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict',
-      maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
+      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+      maxAge: 7 * 24 * 60 * 60 * 1000
     });
 
+    // ✅ Return token in response
     res.status(201).json({
       success: true,
       message: 'Registration successful',
+      token, // ✅ ADD THIS LINE
       data: { tenant }
     });
   } catch (error) {
     next(error);
   }
 };
+
 
 exports.updateCredentials = async (req, res, next) => {
   try {

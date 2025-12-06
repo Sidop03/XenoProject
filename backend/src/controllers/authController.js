@@ -4,7 +4,7 @@ const prisma = require('../config/prisma');
 const { blacklistToken } = require('../config/redis');
 
 const getCookieOptions = () => {
-  const isProduction = process.env.NODE_ENV === 'production';
+  const isProduction = process.env.NODE_ENV === 'production'; 
   
   console.log('🍪 Setting cookie with:', {
     NODE_ENV: process.env.NODE_ENV,
@@ -15,8 +15,8 @@ const getCookieOptions = () => {
   
   return {
     httpOnly: true,
-    secure: isProduction, // MUST be true in production
-    sameSite: isProduction ? 'none' : 'lax', // MUST be 'none' in production
+    secure: isProduction,
+    sameSite: isProduction ? 'none' : 'lax',
     maxAge: 7 * 24 * 60 * 60 * 1000,
     path: '/'
   };
@@ -50,16 +50,17 @@ exports.login = async (req, res, next) => {
       { expiresIn: process.env.JWT_EXPIRES_IN || '7d' }
     );
 
-    // Set token in httpOnly cookie
-    // Set cookie with cross-domain settings
+    // Set cookie
     const cookieOptions = getCookieOptions();
     res.cookie('authToken', token, cookieOptions);
     
-    console.log('✅ Login successful, cookie set for:', tenant.email);
+    console.log('✅ Login successful, token:', token.substring(0, 20) + '...');
     
+    // ✅ Return token in response body
     res.json({
       success: true,
       message: 'Login successful',
+      token, // ✅ ADDED
       data: {
         tenant: {
           id: tenant.id,
@@ -78,16 +79,11 @@ exports.logout = async (req, res, next) => {
     const token = req.token;
 
     if (token) {
-      // Blacklist the token in Redis (expires in 7 days)
       await blacklistToken(token, 7 * 24 * 60 * 60);
     }
 
-    // Clear the cookie
-    res.clearCookie('authToken', {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict'
-    });
+    // Clear cookie
+    res.clearCookie('authToken', getCookieOptions());
 
     res.json({
       success: true,
