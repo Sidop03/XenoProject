@@ -45,7 +45,7 @@ exports.getOrders = async (req, res) => {
           },
           orderBy: { orderDate: 'desc' },
           skip,
-          take: parseInt(limit)
+          take: parseInt(limit)  
         }),
         prisma.order.count({ where })
       ]);

@@ -62,7 +62,7 @@ const Products = () => {
       label: 'Price',
       render: (row) => (
         <span className="font-semibold text-primary">
-          ${row.price.toFixed(2)}
+          ₹{row.price.toFixed(2)}
         </span>
       )
     },

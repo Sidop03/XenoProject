@@ -149,7 +149,7 @@ exports.getSyncStatus = async (req, res, next) => {
 
     const summary = await prisma.syncLog.groupBy({
       by: ['syncType', 'status'],
-      where: { tenantId: req.tenantId },
+      where: { tenantId: req.tenantId }, 
       _count: true
     });
 

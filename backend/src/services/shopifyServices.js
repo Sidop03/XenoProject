@@ -201,7 +201,7 @@ class ShopifyService {
       await this.logSync(tenantId, 'orders', 'success', syncedCount);
       return { success: true, count: syncedCount };
     } catch (error) {
-      console.error('Order sync failed:', error.message);
+      console.error('Order sync failed:', error.message);  
       await this.logSync(tenantId, 'orders', 'failed', 0, error.message);
       throw error;
     }
