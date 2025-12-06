@@ -54,7 +54,7 @@ exports.login = async (req, res, next) => {
     const cookieOptions = getCookieOptions();
     res.cookie('authToken', token, cookieOptions);
     
-    console.log('✅ Login successful, token:', token.substring(0, 20) + '...');
+    console.log('Login successful, token:', token.substring(0, 20) + '...');
     
     // ✅ Return token in response body
     res.json({
@@ -120,3 +120,4 @@ exports.getProfile = async (req, res, next) => {
     next(error);
   }
 };
+ 

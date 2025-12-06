@@ -16,9 +16,9 @@ api.interceptors.request.use(
     const token = localStorage.getItem('token');
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
-      console.log('✅ Sending token in Authorization header'); // Debug
+      console.log('Sending token in Authorization header'); // Debug
     } else {
-      console.log('⚠️ No token in localStorage'); // Debug
+      console.log('No token in localStorage'); // Debug
     }
     return config;
   },
@@ -32,7 +32,7 @@ api.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401) {
-      console.log('❌ 401 error - clearing token and redirecting');
+      console.log('401 error - clearing token and redirecting');
       localStorage.removeItem('token');
       localStorage.removeItem('user');
       window.location.href = '/#/';

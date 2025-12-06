@@ -189,19 +189,19 @@ class ShopifyService {
               updatedAt: new Date(order.updated_at)
             }
           });
-          console.log(`✅ Synced order #${order.order_number}`);
+          console.log(`Synced order #${order.order_number}`);
           syncedCount++;
         } catch (error) {
-          console.error(`❌ Failed order #${order.order_number}:`, error.message);
+          console.error(`Failed order #${order.order_number}:`, error.message);
         }
       }
   
-      console.log(`\n✅ Total synced: ${syncedCount} orders`);
+      console.log(`\nTotal synced: ${syncedCount} orders`);
       
       await this.logSync(tenantId, 'orders', 'success', syncedCount);
       return { success: true, count: syncedCount };
     } catch (error) {
-      console.error('❌ Order sync failed:', error.message);
+      console.error('Order sync failed:', error.message);
       await this.logSync(tenantId, 'orders', 'failed', 0, error.message);
       throw error;
     }

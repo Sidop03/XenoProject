@@ -6,7 +6,7 @@ let subscriber = null;
 
 const connectRedis = async () => {
   if (!process.env.REDIS_URL) {
-    console.log('⚠️  Redis URL not provided - running without Redis');
+    console.log('Redis URL not provided - running without Redis');
     return;
   }
 
@@ -17,7 +17,7 @@ const connectRedis = async () => {
         connectTimeout: 30000, // 30 seconds (increased from default 5s)
         reconnectStrategy: (retries) => {
           if (retries > 3) {
-            console.log('❌ Redis max retries reached');
+            console.log('Redis max retries reached');
             return new Error('Redis connection failed');
           }
           console.log(`🔄 Redis reconnecting... attempt ${retries}`);
@@ -35,9 +35,9 @@ const connectRedis = async () => {
       subscriber.connect()
     ]);
 
-    console.log('✅ Redis connected successfully');
+    console.log('Redis connected successfully');
   } catch (error) {
-    console.error('⚠️  Redis connection failed:', error.message);
+    console.error('Redis connection failed:', error.message);
     redisClient = null;
     publisher = null;
     subscriber = null;
@@ -53,15 +53,15 @@ const connectRedis = async () => {
  */
 const blacklistToken = async (token, expiresIn) => {
   if (!redisClient) {
-    console.log('⚠️  Redis not available, cannot blacklist token');
+    console.log('Redis not available, cannot blacklist token');
     return;
   }
 
   try {
     await redisClient.setEx(`blacklist:${token}`, expiresIn, 'true');
-    console.log('✅ Token blacklisted');
+    console.log('Token blacklisted');
   } catch (error) {
-    console.error('❌ Error blacklisting token:', error);
+    console.error('Error blacklisting token:', error);
   }
 };
 
@@ -72,7 +72,7 @@ const blacklistToken = async (token, expiresIn) => {
  */
 const isTokenBlacklisted = async (token) => {
   if (!redisClient) {
-    console.log('⚠️  Redis not available, skipping blacklist check');
+    console.log('Redis not available, skipping blacklist check');
     return false; // If Redis is down, allow the request
   }
 
@@ -80,7 +80,7 @@ const isTokenBlacklisted = async (token) => {
     const result = await redisClient.get(`blacklist:${token}`);
     return result === 'true';
   } catch (error) {
-    console.error('❌ Error checking token blacklist:', error);
+    console.error('Error checking token blacklist:', error);
     return false; // If check fails, allow the request
   }
 };

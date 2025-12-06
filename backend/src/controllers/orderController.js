@@ -40,7 +40,7 @@ exports.getOrders = async (req, res) => {
                 firstName: true,
                 lastName: true,
                 email: true
-              }
+              } 
             }
           },
           orderBy: { orderDate: 'desc' },
@@ -50,7 +50,7 @@ exports.getOrders = async (req, res) => {
         prisma.order.count({ where })
       ]);
   
-      console.log(`✅ Found ${orders.length} orders (${total} total)`);
+      console.log(`Found ${orders.length} orders (${total} total)`);
   
       res.json({
         success: true,

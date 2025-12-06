@@ -38,13 +38,13 @@ const Register = () => {
   };
 
   return (
-    <div className="min-h-screen bg-accent flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
       <div className="max-w-2xl w-full">
         <div className="bg-white rounded-2xl shadow-xl p-8">
           <div className="text-center mb-8">
-            <div className="w-16 h-16 bg-primary rounded-full flex items-center justify-center mx-auto mb-4">
+            {/* <div className="w-16 h-16 bg-gray-900 rounded-full flex items-center justify-center mx-auto mb-4">
               <UserPlus className="w-8 h-8 text-white" />
-            </div>
+            </div> */}
             <h1 className="text-3xl font-bold text-gray-900">Create Account</h1>
             <p className="text-gray-600 mt-2">Connect your Shopify store to Xeno</p>
           </div>
@@ -66,7 +66,7 @@ const Register = () => {
                   name="email"
                   value={formData.email}
                   onChange={handleChange}
-                  className="w-full px-4 py-3 border border-gray-300 text-gray-700 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent outline-none"
+                  className="w-full px-4 py-3 border border-gray-300 text-gray-900 rounded-lg focus:ring-2 focus:ring-gray-900 focus:border-transparent outline-none transition-all"
                   required
                 />
               </div>
@@ -80,7 +80,7 @@ const Register = () => {
                   name="password"
                   value={formData.password}
                   onChange={handleChange}
-                  className="w-full px-4 py-3 border border-gray-300 text-gray-700 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent outline-none"
+                  className="w-full px-4 py-3 border border-gray-300 text-gray-900 rounded-lg focus:ring-2 focus:ring-gray-900 focus:border-transparent outline-none transition-all"
                   required
                 />
               </div>
@@ -95,7 +95,7 @@ const Register = () => {
                 name="shopName"
                 value={formData.shopName}
                 onChange={handleChange}
-                className="w-full px-4 py-3 border border-gray-300 text-gray-700 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent outline-none"
+                className="w-full px-4 py-3 border border-gray-300 text-gray-900 rounded-lg focus:ring-2 focus:ring-gray-900 focus:border-transparent outline-none transition-all"
                 placeholder="My Awesome Store"
                 required
               />
@@ -110,7 +110,7 @@ const Register = () => {
                 name="shopifyStoreUrl"
                 value={formData.shopifyStoreUrl}
                 onChange={handleChange}
-                className="w-full px-4 py-3 border border-gray-300 text-gray-700 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent outline-none"
+                className="w-full px-4 py-3 border border-gray-300 text-gray-900 rounded-lg focus:ring-2 focus:ring-gray-900 focus:border-transparent outline-none transition-all"
                 placeholder="your-store.myshopify.com"
                 required
               />
@@ -125,7 +125,7 @@ const Register = () => {
                 name="shopifyAccessToken"
                 value={formData.shopifyAccessToken}
                 onChange={handleChange}
-                className="w-full px-4 py-3 border border-gray-300 text-gray-700 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent outline-none"
+                className="w-full px-4 py-3 border border-gray-300 text-gray-900 rounded-lg focus:ring-2 focus:ring-gray-900 focus:border-transparent outline-none transition-all"
                 placeholder="shpat_xxxxxxxxxxxxx"
                 required
               />
@@ -137,7 +137,7 @@ const Register = () => {
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-primary text-white py-3 rounded-lg font-medium hover:bg-primary/90 disabled:opacity-50 transition-colors"
+              className="w-full bg-gray-900 text-white py-3 rounded-lg font-medium hover:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed transition-colors shadow-lg"
             >
               {loading ? 'Creating Account...' : 'Create Account'}
             </button>
@@ -146,7 +146,7 @@ const Register = () => {
           <div className="mt-6 text-center">
             <p className="text-sm text-gray-600">
               Already have an account?{' '}
-              <Link to="/login" className="text-primary font-medium hover:underline">
+              <Link to="/login" className="text-gray-900 font-medium hover:underline">
                 Sign in here
               </Link>
             </p>

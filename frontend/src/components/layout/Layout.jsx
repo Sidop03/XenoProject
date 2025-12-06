@@ -5,10 +5,16 @@ const Layout = ({ children }) => {
   return (
     <div className="flex min-h-screen bg-gray-50">
       <Sidebar />
-      <div className="flex-1 lg:ml-64">
+      
+      {/* Main content - Responsive margin */}
+      <div className="flex-1 w-full lg:ml-64">
         <Navbar />
-        <main className="mt-16 p-4 lg:p-6">
-          {children}
+        
+        {/* Content with responsive padding and top margin for navbar */}
+        <main className="mt-14 sm:mt-16 p-3 sm:p-4 lg:p-6 w-full overflow-x-hidden">
+          <div className="max-w-full">
+            {children}
+          </div>
         </main>
       </div>
     </div>

@@ -15,16 +15,16 @@ export const AuthProvider = ({ children }) => {
     try {
       const token = localStorage.getItem('token');
       if (token) {
-        console.log('✅ Token found in localStorage, checking auth...');
+        console.log('Token found in localStorage, checking auth...');
         const response = await getProfile();
         const tenant = response.data.data?.tenant || response.data.tenant;
         setUser(tenant);
-        console.log('✅ Auth check successful:', tenant.email);
+        console.log('Auth check successful:', tenant.email);
       } else {
-        console.log('⚠️ No token found in localStorage');
+        console.log('No token found in localStorage');
       }
     } catch (error) {
-      console.error('❌ Auth check failed:', error);
+      console.error('Auth check failed:', error);
       localStorage.removeItem('token');
       localStorage.removeItem('user');
       setUser(null);
@@ -42,17 +42,17 @@ export const AuthProvider = ({ children }) => {
       const tenant = data?.tenant;
       
       if (token) {
-        console.log('✅ Storing token in localStorage');
+        console.log('Storing token in localStorage');
         localStorage.setItem('token', token);
         localStorage.setItem('user', JSON.stringify(tenant));
         setUser(tenant);
         return { success: true };
       } else {
-        console.error('❌ No token in login response');
+        console.error('No token in login response');
         throw new Error('No token received from server');
       }
     } catch (error) {
-      console.error('❌ Login failed:', error);
+      console.error('Login failed:', error);
       throw error;
     }
   };

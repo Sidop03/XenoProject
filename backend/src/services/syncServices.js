@@ -3,7 +3,7 @@ const prisma = require('../config/prisma');
 const ShopifyService = require('./shopifyServices');
 
 const syncAllTenants = async () => {
-  console.log('🔄 Starting scheduled sync for all tenants...');
+  console.log('Starting scheduled sync for all tenants...');
   
   try {
     const tenants = await prisma.tenant.findMany({
@@ -25,15 +25,15 @@ const syncAllTenants = async () => {
         await shopify.syncProducts(tenant.id);
         await shopify.syncOrders(tenant.id);
 
-        console.log(`✅ Completed sync for: ${tenant.shopName}`);
+        console.log(`Completed sync for: ${tenant.shopName}`);
       } catch (error) {
-        console.error(`❌ Sync failed for ${tenant.shopName}:`, error.message);
+        console.error(`Sync failed for ${tenant.shopName}:`, error.message);
       }
     }
 
-    console.log('✅ Scheduled sync completed for all tenants');
+    console.log('Scheduled sync completed for all tenants');
   } catch (error) {
-    console.error('❌ Scheduled sync error:', error);
+    console.error('Scheduled sync error:', error);
   }
 };
 
@@ -43,7 +43,7 @@ const startSyncScheduler = () => {
     syncAllTenants();
   });
 
-  console.log('⏰ Sync scheduler started (runs every 10 minutes)');
+  console.log('Sync scheduler started (runs every 10 minutes)');
 };
 
 module.exports = { startSyncScheduler, syncAllTenants };
