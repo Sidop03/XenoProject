@@ -1,66 +1,56 @@
-Xeno CRM – Shopify Customer Relationship Manager
+# 📦 Xeno CRM – Shopify Customer Relationship Manager
 
-Xeno CRM is a full-stack platform built for Shopify merchants to manage customer data, segment audiences, sync Shopify orders, and run campaigns — all in one place.
+Xeno CRM is a full-stack platform built for Shopify merchants to manage customers, sync orders, segment audiences, and run targeted campaigns.  
+It is designed with multi-tenant support, high performance, and scalable architecture.
 
-🚀 Features
+## 🚀 Features
+- 🔗 Shopify Webhook Integration (Orders, Customers)
+- 👥 Multi-Store / Multi-Tenant Architecture
+- 📊 Real-Time Data Sync
+- 🎯 Audience Segmentation
+- 📨 Campaign Builder
+- 🔒 JWT Authentication & Role Management
+- 📈 Analytics Dashboard
 
-Shopify Webhook Integration (Orders, Customers)
-
-Tenant-based Multi-Store Architecture
-
-Real-time Customer Syncing
-
-Audience Segmentation
-
-Campaign Creation & Targeting
-
-Secure Authentication (JWT)
-
-Role-based Access Control
-
-Full Admin Dashboard
-
-🏗️ Architecture Overview
+## 🏗️ System Architecture
+```mermaid
 graph TD
-    A[Shopify Store] -->|Webhooks| B(Backend API)
+    A[Shopify Store] -->|Webhooks| B(Backend API - Node.js)
     B --> C[(PostgreSQL Database)]
     B --> D[(Redis Cache)]
-    E[Admin Dashboard - React] --> B
-    B --> F[Background Workers]
+    E[React Admin Dashboard] --> B
+    B --> F[Background Workers / Queue]
+```
 
-🛠️ Tech Stack
-Backend
+## 🛠️ Tech Stack
+### Backend
+- Node.js  
+- Express.js  
+- Prisma ORM  
+- PostgreSQL  
+- Redis  
+- Shopify Admin API  
+- JWT Auth  
 
-Node.js
+### Frontend
+- React.js  
+- TailwindCSS  
+- Recharts  
 
-Express.js
-
-PostgreSQL (via Prisma ORM)
-
-Redis (Caching)
-
-Shopify Admin API
-
-JWT Authentication
-
-Frontend
-
-React.js
-
-TailwindCSS
-
-Recharts (Analytics)
-
-🔄 Shopify Sync Flow
+## 🔄 Shopify Sync Flow
+```mermaid
 sequenceDiagram
     participant Shopify
     participant Backend
     participant DB
-    Shopify->>Backend: Order/Create Webhook
-    Backend->>DB: Insert/Update Customer & Order
-    Backend-->>Shopify: 200 OK
 
-🏬 Multi-Tenant Database Model
+    Shopify->>Backend: Order/Create Webhook
+    Backend->>DB: Insert or update customer & order
+    Backend-->>Shopify: Respond 200 OK
+```
+
+## 🏬 Multi-Tenant Data Model
+```mermaid
 erDiagram
     Tenant ||--o{ Customer : has
     Tenant ||--o{ Order : has  
@@ -76,23 +66,28 @@ erDiagram
         string id PK
         string tenantId FK
         string email
+        string firstName
+        string lastName
+        string phone
         float totalSpent
         int ordersCount
     }
 
     Order {
         string id PK
-        string customerId FK
         string tenantId FK
+        string customerId FK
         float amount
         date createdAt
     }
+```
 
-📡 API Endpoints (Backend)
+## 📡 API Overview
+```mermaid
 flowchart TD
     A[/Client/] --> B{Auth}
-    B -->|Login| C[POST /auth/login]
-    B -->|Signup| D[POST /auth/signup]
+    B --> C[POST /auth/login]
+    B --> D[POST /auth/signup]
 
     A --> E{Customers}
     E --> F[GET /customers]
@@ -105,46 +100,61 @@ flowchart TD
     A --> K{Webhooks}
     K --> L[POST /webhook/order-create]
     K --> M[POST /webhook/customer-create]
+```
 
-📁 Project Structure
+## 📁 Project Structure
+```
 xeno_project/
 │
 ├── backend/
 │   ├── src/
 │   │   ├── controllers/
-│   │   ├── middleware/
 │   │   ├── services/
-│   │   └── prisma/
+│   │   ├── middleware/
+│   │   ├── prisma/
+│   │   └── utils/
 │   └── server.js
 │
 └── frontend/
     ├── src/
-    ├── components/
     ├── pages/
+    ├── components/
     └── App.jsx
+```
 
-⚙️ Environment Variables
-
-Create a .env file in /backend:
-
+## ⚙️ Environment Variables
+Create a `.env` in `/backend`:
+```
 DATABASE_URL=postgres://...
 REDIS_URL=redis://...
 SHOPIFY_API_KEY=...
 SHOPIFY_API_SECRET=...
 JWT_SECRET=...
+```
 
-🧪 Running The Project
-Backend
+## 🧪 How to Run
+### Backend
+```bash
 cd backend
 npm install
 npm run dev
-
-Frontend
+```
+### Frontend
+```bash
 cd frontend
 npm install
-npm start
+npm run dev
+```
 
-📬 Webhook Endpoints (Shopify)
-Event	Endpoint
-Order Create	/webhook/order-create
-Customer Create	/webhook/customer-create
+## 📬 Webhook Endpoints
+| Event            | Endpoint                       |
+|------------------|--------------------------------|
+| Order Create     | /webhook/order-create          |
+| Customer Create  | /webhook/customer-create       |
+
+## 👤 Author
+**Siddhant Vyas**  
+Full-Stack Developer — Node.js | React | PostgreSQL | TailwindCSS  
+
+## ⭐ Contribute / Feedback
+PRs and feedback are welcome!
