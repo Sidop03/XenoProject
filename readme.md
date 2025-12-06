@@ -15,7 +15,7 @@ It is designed with multi-tenant support, high performance, and scalable archite
 ## 🏗️ System Architecture
 ```mermaid
 graph TD
-    A[Shopify Store] -->|Webhooks| B(Backend API - Node.js)
+    A[Shopify Store] -->|Webhooks| B[Backend API<br>(Node.js)]
     B --> C[(PostgreSQL Database)]
     B --> D[(Redis Cache)]
     E[React Admin Dashboard] --> B
@@ -40,21 +40,22 @@ graph TD
 ## 🔄 Shopify Sync Flow
 ```mermaid
 sequenceDiagram
-    participant Shopify
-    participant Backend
-    participant DB
+    participant S as Shopify
+    participant B as Backend
+    participant D as Database
 
-    Shopify->>Backend: Order/Create Webhook
-    Backend->>DB: Insert or update customer & order
-    Backend-->>Shopify: Respond 200 OK
+    S->>B: Order/Create Webhook
+    B->>D: Insert or Update Customer & Order
+    D-->>B: Success
+    B-->>S: 200 OK
 ```
 
 ## 🏬 Multi-Tenant Data Model
 ```mermaid
 erDiagram
     Tenant ||--o{ Customer : has
-    Tenant ||--o{ Order : has  
-    Customer ||--o{ Order : places  
+    Tenant ||--o{ Order : has
+    Customer ||--o{ Order : places
 
     Tenant {
         string id PK
@@ -80,12 +81,13 @@ erDiagram
         float amount
         date createdAt
     }
+
 ```
 
 ## 📡 API Overview
 ```mermaid
 flowchart TD
-    A[/Client/] --> B{Auth}
+    A[Client] --> B{Auth}
     B --> C[POST /auth/login]
     B --> D[POST /auth/signup]
 
@@ -100,6 +102,7 @@ flowchart TD
     A --> K{Webhooks}
     K --> L[POST /webhook/order-create]
     K --> M[POST /webhook/customer-create]
+
 ```
 
 ## 📁 Project Structure
